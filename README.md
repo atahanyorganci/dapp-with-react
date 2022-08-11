@@ -49,4 +49,26 @@ function App() {
 }
 ```
 
+How ever there are two problems here! First the user gets prompted before they can see the app and if they change their account the app doesn't update!
+
+### Listening to Account Changes
+
+`ethereum` object is an `EventEmitter` so we can listen to `accountsChanged` event when we initialize our application.
+
+```js
+window.ethereum.on("accountsChanged", accounts => {
+  setAccount(accounts[0]); // set new account state
+});
+```
+
+### Accessing Accounts
+
+There is an alternative method called `eth_accounts` that query MetaMask if the user has already connected their account to our application. If user has already connected their account MetaMask will simply return the account without prompting.
+
+```js
+const [account] = await window.ethereum.request({
+  method: "eth_accounts",
+});
+```
+
 [vite]: https://vitejs.dev/
