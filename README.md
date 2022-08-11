@@ -71,4 +71,13 @@ const [account] = await window.ethereum.request({
 });
 ```
 
+## Interacting with EVM using [`ethers`][ethers]
+
+We will be using [`ethers`][ethers] to interact with the blockchain. `ethers` can be installed with `npm` simply by running following command in the terminal.
+```bash
+npm i ethers
+```
+
+
 [vite]: https://vitejs.dev/
+[ethers]: https://github.com/ethers-io/ethers.js
