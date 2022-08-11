@@ -78,6 +78,43 @@ We will be using [`ethers`][ethers] to interact with the blockchain. `ethers` ca
 npm i ethers
 ```
 
+`ethers` library includes multiple types of providers for accessing onchain data. These include popular providers like [`InfuraProvider`](https://docs.ethers.io/v5/api/providers/api-providers/#InfuraProvider) (a popular JSON-RPC endpoint provider, [website](https://infura.io/)), generic providers such as [`JsonRpcProvider`](https://docs.ethers.io/v5/api/providers/api-providers/#InfuraProvider) and [`Web3Provider`](https://docs.ethers.io/v5/api/providers/other/#Web3Provider) which connects using MetaMask.
+
+We can initialize our provider with global `ethereum` object as follows.
+```js
+import { ethers } from "ethers";
+
+// ...
+
+const provider = new ethers.providers.Web3Provider(window.ethereum);
+```
+
+Having initialized our provider we can now access chain data! Let's start by building a `Balance` React component that display's chain's default coin in this case AVAX. `Balance` component receives `account` and `provider` as props and computes the balance and displays it.
+
+```jsx
+const Balance = ({ provider, account }) => {
+  const [balance, setBalance] = useState("");
+
+  useEffect(() => {
+    const getBalance = async () => {
+      const balance = await provider.getBalance(account);
+      return ethers.utils.formatEther(balance);
+    };
+    getBalance().then(setBalance).catch(console.error);
+  }, [account, provider]);
+
+  if (!balance) {
+    return <p>Loading...</p>;
+  }
+  return <p>Balance: {balance} AVAX</p>;
+};
+```
+
+We derive our balance state from `account` and `provider` using `useEffect` hook. If the user changes their account their balance is recalculated. We use `provider.getBalance(account)` function to access user's AVAX balance and convert it to string using `formatEther` function.
+
+> In EVM balance of a ERC20 token is stored as a unsigned 256-bit integer. However, JavaScript `Number` type is a [double-precision 64-bit binary format IEEE 754][float] so balance of an account can be larger than JavaScript's numbers allow. `ethers` library represents these numbers as `BigNumber` type and `formatEther` utility function can be used to convert `BigNumber` to `String`.
+
 
 [vite]: https://vitejs.dev/
 [ethers]: https://github.com/ethers-io/ethers.js
+[float]: https://en.wikipedia.org/wiki/Floating-point_arithmetic
