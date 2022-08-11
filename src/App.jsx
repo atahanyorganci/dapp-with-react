@@ -3,6 +3,19 @@ import { useState, useEffect } from "react";
 function App() {
   const [account, setAccount] = useState(null);
 
+  const checkAccounts = async () => {
+    if (!window.ethereum) {
+      return null;
+    }
+    const [account] = await window.ethereum.request({
+      method: "eth_accounts",
+    });
+    window.ethereum.on("accountsChanged", accounts => {
+      setAccount(accounts[0]);
+    });
+    return account;
+  };
+
   const requestAccounts = async () => {
     if (!window.ethereum) {
       return null;
@@ -14,7 +27,7 @@ function App() {
   };
 
   useEffect(() => {
-    requestAccounts().then(setAccount).catch(console.error);
+    checkAccounts().then(setAccount).catch(console.error);
   }, []);
 
   return (
