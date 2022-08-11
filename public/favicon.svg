@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4417.92 4461.3">
+    <defs>
+        <linearGradient id="a" x1="-209.17" y1="2383.73" x2="4210.15" y2="2383.73" gradientTransform="rotate(-13.09 1325.767 1410.4)" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#013491"/>
+            <stop offset=".17" stop-color="#013793"/>
+            <stop offset=".33" stop-color="#04429a"/>
+            <stop offset=".48" stop-color="#0755a7"/>
+            <stop offset=".63" stop-color="#0d70b8"/>
+            <stop offset=".78" stop-color="#1492ce"/>
+            <stop offset=".92" stop-color="#1cbcea"/>
+            <stop offset="1" stop-color="#22d6fb"/>
+        </linearGradient>
+        <linearGradient id="b" x1="-209.17" y1="2494.21" x2="4210.15" y2="2494.21" gradientTransform="rotate(-13.09 1325.767 1410.4)" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#31d8ff"/>
+            <stop offset=".15" stop-color="#23b0e6"/>
+            <stop offset=".33" stop-color="#178ace"/>
+            <stop offset=".51" stop-color="#0c6bbc"/>
+            <stop offset=".68" stop-color="#0556ae"/>
+            <stop offset=".85" stop-color="#0149a6"/>
+            <stop offset="1" stop-color="#0045a4"/>
+        </linearGradient>
+        <linearGradient id="c" x1="1205.92" y1="1792.27" x2="3579.25" y2="1792.27" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#00ebde"/>
+            <stop offset=".31" stop-color="#00e8de"/>
+            <stop offset=".48" stop-color="#00e0e0"/>
+            <stop offset=".61" stop-color="#00d3e3"/>
+            <stop offset=".72" stop-color="#00c0e7"/>
+            <stop offset=".82" stop-color="#00a7ed"/>
+            <stop offset=".92" stop-color="#0089f4"/>
+            <stop offset="1" stop-color="#0066fc"/>
+        </linearGradient>
+        <linearGradient id="d" x1="907.31" y1="1584.85" x2="3281.48" y2="1584.85" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#0066fc"/>
+            <stop offset=".02" stop-color="#0074f8"/>
+            <stop offset=".08" stop-color="#0094f1"/>
+            <stop offset=".15" stop-color="#00afeb"/>
+            <stop offset=".23" stop-color="#00c5e6"/>
+            <stop offset=".31" stop-color="#00d6e2"/>
+            <stop offset=".42" stop-color="#00e2df"/>
+            <stop offset=".58" stop-color="#00e9de"/>
+            <stop offset="1" stop-color="#00ebde"/>
+        </linearGradient>
+    </defs>
+    <path d="M1060.71 3229.71c-211.51-918.83 504.26-1915.84 1414.15-2129.42 881.43-206.91 1691.64 405.52 1938.16 1274.15 13.52-212.55-2.72-430.59-52.94-648.73C4083.91 526.01 2896.95-220.46 1708.92 58.41 520.9 337.29-218.32 1535.91 57.85 2735.6c239.27 1039.41 1162.28 1738.05 2177.27 1724.97-530.87-185.79-1037.79-637.41-1174.4-1230.86Z" style="fill:url(#a)"/>
+    <path d="M3584.36 486.47c145.22 190.32 253.69 414.07 311.08 663.38 214.25 930.73-359.24 1860.63-1280.92 2076.98-921.68 216.35-1842.53-362.76-2056.78-1293.49-128.39-557.73 26.31-1114.98 369.08-1518.76C220.47 923.53-150.82 1829.11 57.85 2735.6 334.02 3935.29 1520.98 4681.76 2709 4402.89c1188.03-278.87 1927.24-1477.49 1651.08-2677.18-117.32-509.66-399.39-937.03-775.71-1239.23Z" style="fill:url(#b)"/>
+    <path d="M1624.37 2875.34c17.36 9.52 34.88 18.44 52.48 27.07 6.82 3.36 13.68 6.59 20.54 9.82 10.3 4.83 20.63 9.49 30.99 14.04 622.58 274.15 1360.1 26.5 1690.28-587.44 342.31-636.5 119.21-1429.43-496.35-1791.56 278.24 405.62 325.66 950.82 76.54 1414.05-34.34 63.85-73.15 123.65-115.63 179.49-34.26 49.96-73.59 94.71-116.9 134.01-402.98 404.61-1032.73 517.02-1560.38 239.04 75.22 99.16 164.89 188.87 268.38 265.2 47.31 34.89 97.17 67.29 150.06 96.29Z" style="fill:url(#c)"/>
+    <path d="M2863.04 492.96c-17.36-9.52-34.88-18.44-52.48-27.07-6.82-3.36-13.68-6.58-20.54-9.82-10.3-4.83-20.63-9.49-30.99-14.04-622.58-274.15-1360.1-26.5-1690.28 587.45-342.31 636.49-122.72 1447.06 492.83 1809.2-278.24-405.62-322.14-968.46-73.02-1431.69 34.34-63.85 73.15-123.65 115.63-179.49 34.26-49.97 73.59-94.71 116.9-134.01 402.98-404.61 1032.73-517.01 1560.38-239.04-75.21-99.16-164.88-188.87-268.38-265.2-47.31-34.89-97.17-67.29-150.06-96.29Z" style="fill:url(#d)"/>
+</svg>
