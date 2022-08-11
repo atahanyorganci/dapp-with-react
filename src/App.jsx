@@ -1,7 +1,26 @@
+import { ethers } from "ethers";
 import { useState, useEffect } from "react";
+
+const Balance = ({ provider, account }) => {
+  const [balance, setBalance] = useState("");
+
+  useEffect(() => {
+    const getBalance = async () => {
+      const balance = await provider.getBalance(account);
+      return ethers.utils.formatEther(balance);
+    };
+    getBalance().then(setBalance).catch(console.error);
+  }, [account, provider]);
+
+  if (!balance) {
+    return <p>Loading...</p>;
+  }
+  return <p>Balance: {balance} AVAX</p>;
+};
 
 function App() {
   const [account, setAccount] = useState(null);
+  const [provider, setProvider] = useState(null);
 
   const checkAccounts = async () => {
     if (!window.ethereum) {
@@ -28,6 +47,10 @@ function App() {
 
   useEffect(() => {
     checkAccounts().then(setAccount).catch(console.error);
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      setProvider(provider);
+    }
   }, []);
 
   return (
@@ -40,6 +63,7 @@ function App() {
       ) : (
         <button onClick={() => requestAccounts()}>Request Accounts</button>
       )}
+      {provider && account && <Balance provider={provider} account={account} />}
     </div>
   );
 }
