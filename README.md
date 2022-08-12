@@ -1,5 +1,7 @@
 # dApp Development with React Workshop
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/b389b075-81c2-4615-9c00-808e32ef1518/deploy-status)](https://ata-token.netlify.app)
+
 ## Initialize React Application with [`vite`][vite]
 
 [`vite`][vite] next generation tooling for building frontend applications. Get started with [`vite`][vite] by running following command.
