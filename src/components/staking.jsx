@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { STAKING_CONTRACT } from "../contracts";
+import { ATA_TOKEN, STAKING_CONTRACT } from "../contracts";
 
 const getStakingViews = async (account, provider) => {
   const signer = provider.getSigner(account);
@@ -25,9 +25,21 @@ const Staking = ({ account, provider }) => {
   const handleStake = async event => {
     event.preventDefault();
     const signer = provider.getSigner(account);
+    const amount = ethers.utils.parseEther(stake);
+
+    const ataToken = ATA_TOKEN.connect(signer);
+    const allowance = await ataToken.allowance(
+      account,
+      STAKING_CONTRACT.address
+    );
+    if (allowance.lt(amount)) {
+      const tx = await ataToken.approve(STAKING_CONTRACT.address, amount);
+      await tx.wait();
+    }
+
     const staking = STAKING_CONTRACT.connect(signer);
 
-    const tx = await staking.stake(ethers.utils.parseEther(stake), {
+    const tx = await staking.stake(amount, {
       gasLimit: 1_000_000,
     });
     await tx.wait();

@@ -304,7 +304,32 @@ const Staking = ({ account, provider }) => {
 };
 ```
 
-Withdrawing funds from contract can be implemented similarly. However, if we try staking our tokens the contract will throw out an error!
+Withdrawing funds from contract can be implemented similarly. However, if we try staking our tokens the contract will throw out an error! This is due to fact that we are not transferring native currency of the chain. While transferring ERC20 tokens into a contract we have **approve** a certain amount of **allowance** for that contract to use.
+
+### Allowance and Approval
+
+We can check if for allowance of a smart contract -*spender*- from an address -*owner*- on ERC20 contract using `allowance(owner, spender)` view function. If allowance is less than amount we want stake, we have to increase the allowance by signing `approve(spender, amount)` message.
+
+```js
+const handleStake = async event => {
+  const signer = provider.getSigner(account);
+  const amount = ethers.utils.parseEther(stake);
+
+  const ataToken = ATA_TOKEN.connect(signer);
+  const allowance = await ataToken.allowance(
+    account,
+    STAKING_CONTRACT.address
+  );
+  if (allowance.lt(amount)) {
+    const tx = await ataToken.approve(STAKING_CONTRACT.address, amount);
+    await tx.wait();
+  }
+  // ...
+};
+```
+
+Voila! With allowance out of our way, we are free to stake and withdraw funds as we like.
+
 
 [vite]: https://vitejs.dev/
 [ethers]: https://github.com/ethers-io/ethers.js
