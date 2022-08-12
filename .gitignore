@@ -27,3 +27,6 @@ dist-ssr
 # Hardhat files
 cache
 artifacts
+
+# Local Netlify folder
+.netlify
