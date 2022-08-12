@@ -1,6 +1,11 @@
 # dApp Development with React Workshop
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/b389b075-81c2-4615-9c00-808e32ef1518/deploy-status)](https://ata-token.netlify.app)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![React.js](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![OpenZeppelin](https://img.shields.io/badge/OpenZeppelin-4E5EE4?logo=openzeppelin&logoColor=fff&style=for-the-badge)
+[![Netlify Deployment](https://img.shields.io/badge/Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://ata-token.netlify.app)
+
+In this workshop we will be building a DeFi application with a custom ERC20 token and staking vault using [vite][vite] to bundle a [React.js][react] application and [ethers][ethers] library to connect to the blockchain. You can checkout the finished project [here][production]. The project is deployed on [Avalanche Fuji Testnet][fuji], you can receive funds from testnet's faucet [here][faucet].
 
 ## Initialize React Application with [`vite`][vite]
 
@@ -346,7 +351,13 @@ const handleClaimReward = async () => {
 };
 ```
 
+## Next Steps
 
+- Add [TypeScript](https://www.typescriptlang.org/) support for large DeFi applications
+- Add [`@tanstack/react-query`](https://tanstack.com/query/v4/) for async state management
+- More smart contracts! Mint NFTs with ERC721?
+
+[react]: https://reactjs.org
 [vite]: https://vitejs.dev/
 [ethers]: https://github.com/ethers-io/ethers.js
 [float]: https://en.wikipedia.org/wiki/Floating-point_arithmetic
@@ -354,3 +365,6 @@ const handleClaimReward = async () => {
 [provider]: https://docs.ethers.io/v5/api/providers/provider/
 [signer]: https://docs.ethers.io/v5/api/signer/#Signer
 [openpad]: https://openpad.app
+[production]: https://ata-token.netlify.app
+[fuji]: https://docs.avax.network/quickstart/fuji-workflow
+[faucet]: https://faucet.avax.network/
