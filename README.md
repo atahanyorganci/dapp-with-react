@@ -330,6 +330,22 @@ const handleStake = async event => {
 
 Voila! With allowance out of our way, we are free to stake and withdraw funds as we like.
 
+### Claiming Rewards
+
+What is DeFi without rewards? Let's finish off our application by allowing users to claim their rewards. This is simple task since we aren't spending ERC20 tokens we don't have to deal with the allowance. The user only has to sign `claimRewards()` function and we are done!
+
+```js
+const handleClaimReward = async () => {
+  const signer = provider.getSigner(account);
+  const staking = STAKING_CONTRACT.connect(signer);
+
+  const tx = await staking.claimReward({
+    gasLimit: 1_000_000,
+  });
+  await tx.wait();
+};
+```
+
 
 [vite]: https://vitejs.dev/
 [ethers]: https://github.com/ethers-io/ethers.js

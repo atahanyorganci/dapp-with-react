@@ -56,6 +56,16 @@ const Staking = ({ account, provider }) => {
     await tx.wait();
   };
 
+  const handleClaimReward = async () => {
+    const signer = provider.getSigner(account);
+    const staking = STAKING_CONTRACT.connect(signer);
+
+    const tx = await staking.claimReward({
+      gasLimit: 1_000_000,
+    });
+    await tx.wait();
+  };
+
   useEffect(() => {
     getStakingViews(account, provider).then(setViews).catch(console.error);
   }, [account, provider]);
@@ -103,6 +113,7 @@ const Staking = ({ account, provider }) => {
           <button type="submit">Withdraw ATA</button>
         </form>
       </div>
+      <button onClick={handleClaimReward}>Claim Reward</button>
     </div>
   );
 };
