@@ -261,6 +261,51 @@ const getStakingViews = async (account, provider) => {
 };
 ```
 
+### Staking and Withdrawing Funds
+
+Users can stake their tokens using `stake(uint256 amount)` function and withdraw their locked funds using `withdraw(uint256 amount)` function. Most important of them all they can claim rewards using `claimReward()` function. Since these functions modify state of the contract we have to use a [`Signer`][signer].
+
+We can write a simple form for user to fill out while staking and fire off relevant contract function when the form is submitted.
+
+```js
+const Staking = ({ account, provider }) => {
+  // ...
+  const [stake, setStake] = useState("");
+
+  const handleStake = async event => {
+    event.preventDefault(); // prevent page refresh when form is submitted
+    const signer = provider.getSigner(account);
+    const staking = STAKING_CONTRACT.connect(signer);
+
+    const tx = await staking.stake(ethers.utils.parseEther(stake), {
+      gasLimit: 1_000_000,
+    });
+    await tx.wait();
+  };
+  // ...
+  return (
+    <div>
+        {/* ... */}
+        <form>
+          <label htmlFor="stake">Stake</label>
+          <input
+            id="stake"
+            placeholder="0.0 ATA"
+            value={stake}
+            onChange={e => setStake(e.target.value)}
+          />
+          <button type="submit" onClick={handleStake}>
+            Stake ATA
+          </button>
+        </form>
+        {/* ... */}
+    </div>
+  );
+};
+```
+
+Withdrawing funds from contract can be implemented similarly. However, if we try staking our tokens the contract will throw out an error!
+
 [vite]: https://vitejs.dev/
 [ethers]: https://github.com/ethers-io/ethers.js
 [float]: https://en.wikipedia.org/wiki/Floating-point_arithmetic
