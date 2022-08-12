@@ -160,8 +160,55 @@ const getBalanceAndClaimed = async () => {
 
 > `Promise.all([awaitable1, awaitable2, ...])` can be used to await multiple async calls at the same time and receive resolved promises in order awaitables' order.
 
+If the user hasn't claimed we can a render a button that when pressed will invoke `claim()` method on the contract. Since, we are modifying state of blockchain it's not enough for us to use a [`Provider`][provider] as they provide a **readonly** view of blockchain. We will be using [`Signer`][signer] which can used to send transactions.
+
+```js
+const claim = async () => {
+  const signer = provider.getSigner();
+  const ataToken = ATA_TOKEN.connect(signer);
+
+  const tx = await ataToken.claim();
+  await tx.wait();
+}
+```
+
+If we refresh the page we can see our funds arrive! However, it isn't such a good user experience if they have to refresh the page every time they make transaction. With some refactoring we can solve this issue.
+
+```js
+const getBalanceAndClaimed = async (account, provider) => {
+  const ataToken = ATA_TOKEN.connect(provider);
+  const [balance, claimed] = await Promise.all([
+    ataToken.balanceOf(account),
+    ataToken.hasClaimed(account),
+  ]);
+  return [ethers.utils.formatEther(balance), claimed];
+};
+
+const AtaToken = ({ account, provider }) => {
+  // `AtaToken` component state
+
+  const claim = async () => {
+    // ...
+    await tx.wait();
+
+    getBalanceAndClaimed(account, provider)
+      .then(/* set balance and claimed */)
+      .catch()
+  };
+
+  useEffect(() => {
+    getBalanceAndClaimed(account, provider)
+      .then(/* set balance and claimed */)
+      .catch()
+  }, [provider, account]);
+
+  // ...
+}
+```
 
 [vite]: https://vitejs.dev/
 [ethers]: https://github.com/ethers-io/ethers.js
 [float]: https://en.wikipedia.org/wiki/Floating-point_arithmetic
 [snowtrace]: https://snowtrace.io
+[provider]: https://docs.ethers.io/v5/api/providers/provider/
+[signer]: https://docs.ethers.io/v5/api/signer/#Signer
