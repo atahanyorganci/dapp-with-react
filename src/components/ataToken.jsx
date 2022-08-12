@@ -7,19 +7,34 @@ const ATA_TOKEN = new ethers.Contract(ATA_TOKEN_ADDRESS, AtaTokenABI);
 
 const AtaToken = ({ account, provider }) => {
   const [balance, setBalance] = useState("");
+  const [claimed, setClaimed] = useState(false);
 
   useEffect(() => {
-    const getBalance = async () => {
+    const getBalanceAndClaimed = async () => {
       const ataToken = ATA_TOKEN.connect(provider);
-      const balance = await ataToken.balanceOf(account);
-      return ethers.utils.formatEther(balance);
+      const [balance, claimed] = await Promise.all([
+        ataToken.balanceOf(account),
+        ataToken.hasClaimed(account),
+      ]);
+      return [ethers.utils.formatEther(balance), claimed];
     };
-    getBalance().then(setBalance).catch(console.error);
+
+    getBalanceAndClaimed()
+      .then(([balance, claimed]) => {
+        setBalance(balance);
+        setClaimed(claimed);
+      })
+      .catch(console.error);
   }, [provider, account]);
 
   return (
     <div>
       <p>AtaToken balance: {balance} ATA</p>
+      {claimed ? (
+        <p>You have already claimed your ATA</p>
+      ) : (
+        <button>Claim ATA</button>
+      )}
     </div>
   );
 };

@@ -141,6 +141,26 @@ useEffect(() => {
 }, [provider, account]);
 ```
 
+As expected AtaToken balance turns out to be 0. Fortunately, AtaToken contract exports a function to obtain some tokens.
+
+## Claiming AtaToken
+
+We can check if an account has claimed using a similar function `claimed()` function and we can modify `useEffect` to check when the `AtaBalance` mounts.
+
+```js
+const getBalanceAndClaimed = async () => {
+  const ataToken = ATA_TOKEN.connect(provider);
+  const [balance, claimed] = await Promise.all([
+    ataToken.balanceOf(account),
+    ataToken.claimed(),
+  ]);
+  return [ethers.utils.formatEther(balance), claimed];
+};
+```
+
+> `Promise.all([awaitable1, awaitable2, ...])` can be used to await multiple async calls at the same time and receive resolved promises in order awaitables' order.
+
+
 [vite]: https://vitejs.dev/
 [ethers]: https://github.com/ethers-io/ethers.js
 [float]: https://en.wikipedia.org/wiki/Floating-point_arithmetic
