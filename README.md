@@ -122,12 +122,12 @@ What is web3 without custom tokens? Let's bring our project's ERC20 token into o
 
 > `ethers.Contract` is a meta class under the hood, meaning it's a class that creates classes not instances! `Contract` class receives ABI and constructs a new class that has ABI's exported properties.
 
-For our purposes ERC20 token called 'AtaToken (ATA)' has deployed to Avalanche Fuji testnet at `0x6d9721fA0CD1668cBA3D29aFe4176E5548230395`. We can use [SnowTrace block explorer][snowtrace] to inspect contract's methods and ABI, token contract on explorer can be found [here](https://testnet.snowtrace.io/address/0x6d9721fA0CD1668cBA3D29aFe4176E5548230395). We can import ABI as a regular JSON file and initialize contract!
+For our purposes ERC20 token called 'AtaToken (ATA)' has deployed to Avalanche Fuji testnet at `0x47741C56064B4c129d585CEe9A9d3A3dB7CDA9ce`. We can use [SnowTrace block explorer][snowtrace] to inspect contract's methods and ABI, token contract on explorer can be found [here](https://testnet.snowtrace.io/address/0x47741C56064B4c129d585CEe9A9d3A3dB7CDA9ce). We can import ABI as a regular JSON file and initialize contract!
 
 ```js
 import AtaTokenABI from "../../abi/ataToken.abi.json"; // Path to ABI's JSON file
 
-const ATA_TOKEN_ADDRESS = "0x6d9721fA0CD1668cBA3D29aFe4176E5548230395";
+const ATA_TOKEN_ADDRESS = "0x47741C56064B4c129d585CEe9A9d3A3dB7CDA9ce";
 const ATA_TOKEN = new ethers.Contract(ATA_TOKEN_ADDRESS, AtaTokenABI);
 ```
 
@@ -236,6 +236,30 @@ const addAtaTokenToMetaMask = async () => {
   }
 };
 ```
+## Integrating Staking Contract
+
+ERC20 allocation staking is one of most common practices in web3 launchpads and DeFi applications. Usually, users lock some amount of funds into smart contract and receive certain amount of rewards funds in return as interest. In case of launchpads like [OpenPad][openpad] in addition to receiving interest users are able to invest in launchpad project.
+
+Lastly, for our application we will integrating a staking contact. AtaToken staking contract is deployed at `0x1710c59920D83c31c1162C5d66730E78cF22b6dD` and we can inspect the contract code and ABI [here](https://testnet.snowtrace.io/address/0x1710c59920D83c31c1162C5d66730E78cF22b6dD#code).
+
+Staking contract exports stake and reward token amount for a given address and also total staked token amounts. We can read these values like any other contract value using `getStaked()`, `getReward()` and `getTotalStaked()` respectively.
+
+```js
+const getStakingViews = async (account, provider) => {
+  const signer = provider.getSigner(account);
+  const staking = STAKING_CONTRACT.connect(signer);
+  const [staked, reward, totalStaked] = await Promise.all([
+    staking.getStaked(),
+    staking.getReward(),
+    staking.getTotalStaked(),
+  ]);
+  return {
+    staked: ethers.utils.formatEther(staked),
+    reward: ethers.utils.formatEther(reward),
+    totalStaked: ethers.utils.formatEther(totalStaked),
+  };
+};
+```
 
 [vite]: https://vitejs.dev/
 [ethers]: https://github.com/ethers-io/ethers.js
@@ -243,3 +267,4 @@ const addAtaTokenToMetaMask = async () => {
 [snowtrace]: https://snowtrace.io
 [provider]: https://docs.ethers.io/v5/api/providers/provider/
 [signer]: https://docs.ethers.io/v5/api/signer/#Signer
+[openpad]: https://openpad.app

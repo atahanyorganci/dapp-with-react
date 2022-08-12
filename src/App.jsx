@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { useState, useEffect } from "react";
 import AtaToken from "./components/ataToken";
+import Staking from "./components/staking";
 
 const Balance = ({ provider, account }) => {
   const [balance, setBalance] = useState("");
@@ -68,6 +69,7 @@ function App() {
         <>
           <Balance provider={provider} account={account} />
           <AtaToken provider={provider} account={account} />
+          <Staking provider={provider} account={account} />
         </>
       )}
     </div>
