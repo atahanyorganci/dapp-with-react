@@ -1,9 +1,6 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import StakingAbi from "../../abi/staking.abi.json";
-
-const STAKING_ADDRESS = "0x2Fea511D355e7A6f8A1F9BE566025a19762B9138";
-const STAKING_CONTRACT = new ethers.Contract(STAKING_ADDRESS, StakingAbi);
+import { STAKING_CONTRACT } from "../contracts";
 
 const getStakingViews = async (account, provider) => {
   const signer = provider.getSigner(account);
