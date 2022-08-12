@@ -44,9 +44,21 @@ const AtaToken = ({ account, provider }) => {
       .catch(console.error);
   }, [provider, account]);
 
+  if (!balance) {
+    return (
+      <div>
+        <h2>Ata Token</h2>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div>
-      <p>AtaToken balance: {balance} ATA</p>
+      <h2>Ata Token</h2>
+      <p>
+        <strong>AtaToken balance:</strong> {balance} ATA
+      </p>
       {claimed ? (
         <p>You have already claimed your ATA</p>
       ) : (
