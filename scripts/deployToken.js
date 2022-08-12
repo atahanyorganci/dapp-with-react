@@ -9,6 +9,11 @@ async function main() {
 
   await ataToken.deployed();
   console.log(`Deployed AtaToken at ${ataToken.address}`);
+
+  await hre.run("verify:verify", {
+    address: ataToken.address,
+    constructorArguments: [],
+  });
 }
 
 main()
