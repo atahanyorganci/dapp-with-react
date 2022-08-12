@@ -208,6 +208,35 @@ const AtaToken = ({ account, provider }) => {
 }
 ```
 
+## Adding AtaToken to MetaMask
+
+Even tough, users can claim their tokens, AtaToken doesn't show up in MetaMask wallet. We can remedy this situation by sending `wallet_watchAsset` request through global `ethereum` object. We provide address of the token, symbol, decimals and lastly image for MetaMask to use.
+
+```js
+const addAtaTokenToMetaMask = async () => {
+  if (!window.ethereum) {
+    return false;
+  }
+  try {
+    const added = await window.ethereum.request({
+      method: "wallet_watchAsset",
+      params: {
+        type: "ERC20",
+        options: {
+          address: ATA_TOKEN_ADDRESS,
+          symbol: "ATA",
+          decimals: 18,
+          image: "https://ata-token.netlify.app/opn.png",
+        },
+      },
+    });
+    return added;
+  } catch (error) {
+    return false;
+  }
+};
+```
+
 [vite]: https://vitejs.dev/
 [ethers]: https://github.com/ethers-io/ethers.js
 [float]: https://en.wikipedia.org/wiki/Floating-point_arithmetic
