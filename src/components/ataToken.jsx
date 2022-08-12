@@ -14,6 +14,29 @@ const getBalanceAndClaimed = async (account, provider) => {
   return [ethers.utils.formatEther(balance), claimed];
 };
 
+const addAtaTokenToMetaMask = async () => {
+  if (!window.ethereum) {
+    return false;
+  }
+  try {
+    const added = await window.ethereum.request({
+      method: "wallet_watchAsset",
+      params: {
+        type: "ERC20",
+        options: {
+          address: ATA_TOKEN_ADDRESS,
+          symbol: "ATA",
+          decimals: 18,
+          image: "https://ata-token.netlify.app/opn.png",
+        },
+      },
+    });
+    return added;
+  } catch (error) {
+    return false;
+  }
+};
+
 const AtaToken = ({ account, provider }) => {
   const [balance, setBalance] = useState("");
   const [claimed, setClaimed] = useState(false);
@@ -64,6 +87,7 @@ const AtaToken = ({ account, provider }) => {
       ) : (
         <button onClick={claim}>Claim ATA</button>
       )}
+      <button onClick={addAtaTokenToMetaMask}>Add to MetaMask</button>
     </div>
   );
 };
