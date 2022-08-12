@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import { useState, useEffect } from "react";
+import AtaToken from "./components/ataToken";
 
 const Balance = ({ provider, account }) => {
   const [balance, setBalance] = useState("");
@@ -63,7 +64,12 @@ function App() {
       ) : (
         <button onClick={() => requestAccounts()}>Request Accounts</button>
       )}
-      {provider && account && <Balance provider={provider} account={account} />}
+      {provider && account && (
+        <>
+          <Balance provider={provider} account={account} />
+          <AtaToken provider={provider} account={account} />
+        </>
+      )}
     </div>
   );
 }

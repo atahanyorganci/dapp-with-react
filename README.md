@@ -114,7 +114,34 @@ We derive our balance state from `account` and `provider` using `useEffect` hook
 
 > In EVM balance of a ERC20 token is stored as a unsigned 256-bit integer. However, JavaScript `Number` type is a [double-precision 64-bit binary format IEEE 754][float] so balance of an account can be larger than JavaScript's numbers allow. `ethers` library represents these numbers as `BigNumber` type and `formatEther` utility function can be used to convert `BigNumber` to `String`.
 
+## Balance of Custom ERC20 Token
+
+What is web3 without custom tokens? Let's bring our project's ERC20 token into our application. To do this, we will be using `ethers.Contract`. This class can be used to instantiate custom EVM contracts from their address and ABI.
+
+> `ethers.Contract` is a meta class under the hood, meaning it's a class that creates classes not instances! `Contract` class receives ABI and constructs a new class that has ABI's exported properties.
+
+For our purposes ERC20 token called 'AtaToken (ATA)' has deployed to Avalanche Fuji testnet at `0x6d9721fA0CD1668cBA3D29aFe4176E5548230395`. We can use [SnowTrace block explorer][snowtrace] to inspect contract's methods and ABI, token contract on explorer can be found [here](https://testnet.snowtrace.io/address/0x6d9721fA0CD1668cBA3D29aFe4176E5548230395). We can import ABI as a regular JSON file and initialize contract!
+
+```js
+import AtaTokenABI from "../../abi/ataToken.abi.json"; // Path to ABI's JSON file
+
+const ATA_TOKEN_ADDRESS = "0x6d9721fA0CD1668cBA3D29aFe4176E5548230395";
+const ATA_TOKEN = new ethers.Contract(ATA_TOKEN_ADDRESS, AtaTokenABI);
+```
+
+Then, we can read token balance using `balanceOf(address)` method similar to AVAX balance.
+```js
+useEffect(() => {
+  const getBalance = async () => {
+    const ataToken = ATA_TOKEN.connect(provider);
+    const balance = await ataToken.balanceOf(account);
+    return ethers.utils.formatEther(balance);
+  };
+  getBalance().then(setBalance).catch(console.error);
+}, [provider, account]);
+```
 
 [vite]: https://vitejs.dev/
 [ethers]: https://github.com/ethers-io/ethers.js
 [float]: https://en.wikipedia.org/wiki/Floating-point_arithmetic
+[snowtrace]: https://snowtrace.io
