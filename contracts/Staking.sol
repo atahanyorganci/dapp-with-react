@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.4;
+pragma solidity >=0.8.0 <0.9.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
@@ -29,8 +29,6 @@ contract Staking is Ownable, Pausable, ReentrancyGuard {
 
   uint256 private totalSupply;
   mapping(address => uint256) private _balances;
-
-  address[] private walletList;
 
   constructor(
     address _stakingToken,
@@ -100,24 +98,20 @@ contract Staking is Ownable, Pausable, ReentrancyGuard {
   }
 
   function stake(uint256 _amount)
-    external
+    public
     nonReentrant
     updateReward(msg.sender)
   {
     require(_amount > 0, "Stake amount must be greater than 0.");
 
     totalSupply = totalSupply.add(_amount);
-
-    if (_balances[msg.sender] == 0) {
-      walletList.push(msg.sender);
-    }
     _balances[msg.sender] = _balances[msg.sender].add(_amount);
     stakingToken.safeTransferFrom(msg.sender, address(this), _amount);
     emit Staked(msg.sender, _amount);
   }
 
   function withdraw(uint256 _amount)
-    external
+    public
     nonReentrant
     updateReward(msg.sender)
   {
@@ -134,29 +128,21 @@ contract Staking is Ownable, Pausable, ReentrancyGuard {
     }
   }
 
-  function claimReward() external nonReentrant updateReward(msg.sender) {
-    uint256 reward = rewards[msg.sender];
-    if (reward > 0) {
+  function claimReward() public nonReentrant updateReward(msg.sender) {
+    uint256 currentReward = rewards[msg.sender];
+    if (currentReward > 0) {
       rewards[msg.sender] = 0;
-      rewardsToken.safeTransferFrom(stakingBank, msg.sender, reward);
-      emit RewardClaimed(msg.sender, reward);
+      rewardsToken.safeTransferFrom(stakingBank, msg.sender, currentReward);
+      emit RewardClaimed(msg.sender, currentReward);
     }
   }
 
-  function getStaked() external view returns (uint256) {
-    return _balances[msg.sender];
-  }
-
-  function getStakedOf(address _account) external view returns (uint256) {
+  function stakedOf(address _account) public view returns (uint256) {
     return _balances[_account];
   }
 
-  function getReward() external view returns (uint256) {
-    return earned(msg.sender);
-  }
-
-  function getRewardOf(address _account)
-    external
+  function rewardOf(address _account)
+    public
     view
     onlyOwner
     returns (uint256)
@@ -164,7 +150,7 @@ contract Staking is Ownable, Pausable, ReentrancyGuard {
     return earned(_account);
   }
 
-  function getTotalStaked() external view returns (uint256) {
+  function totalStaked() public view returns (uint256) {
     return totalSupply;
   }
 }
