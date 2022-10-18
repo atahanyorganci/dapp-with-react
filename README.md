@@ -10,9 +10,11 @@ In this workshop we will be building a DeFi application with a custom ERC20 toke
 ## Initialize React Application with [`vite`][vite]
 
 [`vite`][vite] next generation tooling for building frontend applications. Get started with [`vite`][vite] by running following command.
+
 ```bash
 npm create vite@latest
 ```
+
 We can run the development server using `npm run dev` and local server will start will start with automatic reloads!
 
 > You can remove unnecessary markup and CSS that `vite` creates
@@ -25,7 +27,7 @@ We can send requests to MetaMask using `window.ethereum.request()` method, we as
 
 ```js
 const [account] = await window.ethereum.request({
-    method: "eth_requestAccounts",
+  method: "eth_requestAccounts",
 });
 ```
 
@@ -81,6 +83,7 @@ const [account] = await window.ethereum.request({
 ## Interacting with EVM using [`ethers`][ethers]
 
 We will be using [`ethers`][ethers] to interact with the blockchain. `ethers` can be installed with `npm` simply by running following command in the terminal.
+
 ```bash
 npm i ethers
 ```
@@ -88,6 +91,7 @@ npm i ethers
 `ethers` library includes multiple types of providers for accessing onchain data. These include popular providers like [`InfuraProvider`](https://docs.ethers.io/v5/api/providers/api-providers/#InfuraProvider) (a popular JSON-RPC endpoint provider, [website](https://infura.io/)), generic providers such as [`JsonRpcProvider`](https://docs.ethers.io/v5/api/providers/api-providers/#InfuraProvider) and [`Web3Provider`](https://docs.ethers.io/v5/api/providers/other/#Web3Provider) which connects using MetaMask.
 
 We can initialize our provider with global `ethereum` object as follows.
+
 ```js
 import { ethers } from "ethers";
 
@@ -127,16 +131,17 @@ What is web3 without custom tokens? Let's bring our project's ERC20 token into o
 
 > `ethers.Contract` is a meta class under the hood, meaning it's a class that creates classes not instances! `Contract` class receives ABI and constructs a new class that has ABI's exported properties.
 
-For our purposes ERC20 token called 'AtaToken (ATA)' has deployed to Avalanche Fuji testnet at `0x47741C56064B4c129d585CEe9A9d3A3dB7CDA9ce`. We can use [SnowTrace block explorer][snowtrace] to inspect contract's methods and ABI, token contract on explorer can be found [here](https://testnet.snowtrace.io/address/0x47741C56064B4c129d585CEe9A9d3A3dB7CDA9ce). We can import ABI as a regular JSON file and initialize contract!
+For our purposes ERC20 token called 'AtaToken (ATA)' has deployed to Avalanche Fuji testnet at `0x5E8F49F4062d3a163cED98261396821ae2996596`. We can use [SnowTrace block explorer][snowtrace] to inspect contract's methods and ABI, token contract on explorer can be found [here](https://testnet.snowtrace.io/address/0x5E8F49F4062d3a163cED98261396821ae2996596). We can import ABI as a regular JSON file and initialize contract!
 
 ```js
 import AtaTokenABI from "../../abi/ataToken.abi.json"; // Path to ABI's JSON file
 
-const ATA_TOKEN_ADDRESS = "0x47741C56064B4c129d585CEe9A9d3A3dB7CDA9ce";
+const ATA_TOKEN_ADDRESS = "0x5E8F49F4062d3a163cED98261396821ae2996596";
 const ATA_TOKEN = new ethers.Contract(ATA_TOKEN_ADDRESS, AtaTokenABI);
 ```
 
 Then, we can read token balance using `balanceOf(address)` method similar to AVAX balance.
+
 ```js
 useEffect(() => {
   const getBalance = async () => {
@@ -176,7 +181,7 @@ const claim = async () => {
 
   const tx = await ataToken.claim();
   await tx.wait();
-}
+};
 ```
 
 If we refresh the page we can see our funds arrive! However, it isn't such a good user experience if they have to refresh the page every time they make transaction. With some refactoring we can solve this issue.
@@ -200,17 +205,17 @@ const AtaToken = ({ account, provider }) => {
 
     getBalanceAndClaimed(account, provider)
       .then(/* set balance and claimed */)
-      .catch()
+      .catch();
   };
 
   useEffect(() => {
     getBalanceAndClaimed(account, provider)
       .then(/* set balance and claimed */)
-      .catch()
+      .catch();
   }, [provider, account]);
 
   // ...
-}
+};
 ```
 
 ## Adding AtaToken to MetaMask
@@ -241,11 +246,12 @@ const addAtaTokenToMetaMask = async () => {
   }
 };
 ```
+
 ## Integrating Staking Contract
 
 ERC20 allocation staking is one of most common practices in web3 launchpads and DeFi applications. Usually, users lock some amount of funds into smart contract and receive certain amount of rewards funds in return as interest. In case of launchpads like [OpenPad][openpad] in addition to receiving interest users are able to invest in launchpad project.
 
-Lastly, for our application we will integrating a staking contact. AtaToken staking contract is deployed at `0x1710c59920D83c31c1162C5d66730E78cF22b6dD` and we can inspect the contract code and ABI [here](https://testnet.snowtrace.io/address/0x1710c59920D83c31c1162C5d66730E78cF22b6dD#code).
+Lastly, for our application we will integrating a staking contact. AtaToken staking contract is deployed at `0xAC1BdE0464D932bf1097A9492dCa8c3144194890` and we can inspect the contract code and ABI [here](https://testnet.snowtrace.io/address/0xAC1BdE0464D932bf1097A9492dCa8c3144194890#code).
 
 Staking contract exports stake and reward token amount for a given address and also total staked token amounts. We can read these values like any other contract value using `getStaked()`, `getReward()` and `getTotalStaked()` respectively.
 
@@ -290,20 +296,20 @@ const Staking = ({ account, provider }) => {
   // ...
   return (
     <div>
-        {/* ... */}
-        <form>
-          <label htmlFor="stake">Stake</label>
-          <input
-            id="stake"
-            placeholder="0.0 ATA"
-            value={stake}
-            onChange={e => setStake(e.target.value)}
-          />
-          <button type="submit" onClick={handleStake}>
-            Stake ATA
-          </button>
-        </form>
-        {/* ... */}
+      {/* ... */}
+      <form>
+        <label htmlFor="stake">Stake</label>
+        <input
+          id="stake"
+          placeholder="0.0 ATA"
+          value={stake}
+          onChange={e => setStake(e.target.value)}
+        />
+        <button type="submit" onClick={handleStake}>
+          Stake ATA
+        </button>
+      </form>
+      {/* ... */}
     </div>
   );
 };
@@ -313,7 +319,7 @@ Withdrawing funds from contract can be implemented similarly. However, if we try
 
 ### Allowance and Approval
 
-We can check if for allowance of a smart contract -*spender*- from an address -*owner*- on ERC20 contract using `allowance(owner, spender)` view function. If allowance is less than amount we want stake, we have to increase the allowance by signing `approve(spender, amount)` message.
+We can check if for allowance of a smart contract -_spender_- from an address -_owner_- on ERC20 contract using `allowance(owner, spender)` view function. If allowance is less than amount we want stake, we have to increase the allowance by signing `approve(spender, amount)` message.
 
 ```js
 const handleStake = async event => {
@@ -321,10 +327,7 @@ const handleStake = async event => {
   const amount = ethers.utils.parseEther(stake);
 
   const ataToken = ATA_TOKEN.connect(signer);
-  const allowance = await ataToken.allowance(
-    account,
-    STAKING_CONTRACT.address
-  );
+  const allowance = await ataToken.allowance(account, STAKING_CONTRACT.address);
   if (allowance.lt(amount)) {
     const tx = await ataToken.approve(STAKING_CONTRACT.address, amount);
     await tx.wait();
