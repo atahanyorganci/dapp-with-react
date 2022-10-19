@@ -6,9 +6,9 @@ const getStakingViews = async (account, provider) => {
   const signer = provider.getSigner(account);
   const staking = STAKING_CONTRACT.connect(signer);
   const [staked, reward, totalStaked] = await Promise.all([
-    staking.getStaked(),
-    staking.getReward(),
-    staking.getTotalStaked(),
+    staking.stakedOf(account),
+    staking.rewardOf(account),
+    staking.totalStaked(),
   ]);
   return {
     staked: ethers.utils.formatEther(staked),

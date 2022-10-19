@@ -157,14 +157,14 @@ As expected AtaToken balance turns out to be 0. Fortunately, AtaToken contract e
 
 ## Claiming AtaToken
 
-We can check if an account has claimed using a similar function `claimed()` function and we can modify `useEffect` to check when the `AtaBalance` mounts.
+We can check if an account has claimed using a similar function `hasClaimed()` function and we can modify `useEffect` to check when the `AtaBalance` mounts.
 
 ```js
 const getBalanceAndClaimed = async () => {
   const ataToken = ATA_TOKEN.connect(provider);
   const [balance, claimed] = await Promise.all([
     ataToken.balanceOf(account),
-    ataToken.claimed(),
+    ataToken.hasClaimed(),
   ]);
   return [ethers.utils.formatEther(balance), claimed];
 };
@@ -253,16 +253,16 @@ ERC20 allocation staking is one of most common practices in web3 launchpads and 
 
 Lastly, for our application we will integrating a staking contact. AtaToken staking contract is deployed at `0xAC1BdE0464D932bf1097A9492dCa8c3144194890` and we can inspect the contract code and ABI [here](https://testnet.snowtrace.io/address/0xAC1BdE0464D932bf1097A9492dCa8c3144194890#code).
 
-Staking contract exports stake and reward token amount for a given address and also total staked token amounts. We can read these values like any other contract value using `getStaked()`, `getReward()` and `getTotalStaked()` respectively.
+Staking contract exports stake and reward token amount for a given address and also total staked token amounts. We can read these values like any other contract value using `stakedOf()`, `rewardOf()` and `totalStaked()` respectively.
 
 ```js
 const getStakingViews = async (account, provider) => {
   const signer = provider.getSigner(account);
   const staking = STAKING_CONTRACT.connect(signer);
   const [staked, reward, totalStaked] = await Promise.all([
-    staking.getStaked(),
-    staking.getReward(),
-    staking.getTotalStaked(),
+    staking.stakedOf(account),
+    staking.rewardOf(account),
+    staking.totalStaked(),
   ]);
   return {
     staked: ethers.utils.formatEther(staked),
