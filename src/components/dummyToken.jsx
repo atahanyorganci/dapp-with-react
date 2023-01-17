@@ -1,17 +1,17 @@
 import { ethers } from "ethers";
-import { useState, useEffect } from "react";
-import { ATA_TOKEN, ATA_TOKEN_ADDRESS } from "../contracts";
+import { useEffect, useState } from "react";
+import { DUMMY_TOKEN, DUMMY_TOKEN_ADDRESS } from "../contracts";
 
 const getBalanceAndClaimed = async (account, provider) => {
-  const ataToken = ATA_TOKEN.connect(provider);
+  const dummyToken = DUMMY_TOKEN.connect(provider);
   const [balance, claimed] = await Promise.all([
-    ataToken.balanceOf(account),
-    ataToken.hasClaimed(account),
+    dummyToken.balanceOf(account),
+    dummyToken.hasClaimed(account),
   ]);
   return [ethers.utils.formatEther(balance), claimed];
 };
 
-const addAtaTokenToMetaMask = async () => {
+const addDummyTokenToMetaMask = async () => {
   if (!window.ethereum) {
     return false;
   }
@@ -21,10 +21,9 @@ const addAtaTokenToMetaMask = async () => {
       params: {
         type: "ERC20",
         options: {
-          address: ATA_TOKEN_ADDRESS,
-          symbol: "ATA",
+          address: DUMMY_TOKEN_ADDRESS,
+          symbol: "DT",
           decimals: 18,
-          image: "https://ata-token.netlify.app/opn.png",
         },
       },
     });
@@ -34,14 +33,14 @@ const addAtaTokenToMetaMask = async () => {
   }
 };
 
-const AtaToken = ({ account, provider }) => {
+const DummyToken = ({ account, provider }) => {
   const [balance, setBalance] = useState("");
   const [claimed, setClaimed] = useState(false);
 
   const claim = async () => {
     const signer = provider.getSigner();
-    const ataToken = ATA_TOKEN.connect(signer);
-    const tx = await ataToken.claim({
+    const dummyToken = DUMMY_TOKEN.connect(signer);
+    const tx = await dummyToken.claim({
       gasLimit: 1_000_000,
     });
     const receipt = await tx.wait();
@@ -67,7 +66,7 @@ const AtaToken = ({ account, provider }) => {
   if (!balance) {
     return (
       <div>
-        <h2>Ata Token</h2>
+        <h2>Dummy Token</h2>
         <p>Loading...</p>
       </div>
     );
@@ -75,18 +74,18 @@ const AtaToken = ({ account, provider }) => {
 
   return (
     <div>
-      <h2>Ata Token</h2>
+      <h2>Dummy Token</h2>
       <p>
-        <strong>AtaToken balance:</strong> {balance} ATA
+        <strong>DummyToken balance:</strong> {balance} DT
       </p>
       {claimed ? (
-        <p>You have already claimed your ATA</p>
+        <p>You have already claimed your DT</p>
       ) : (
-        <button onClick={claim}>Claim ATA</button>
+        <button onClick={claim}>Claim DT</button>
       )}
-      <button onClick={addAtaTokenToMetaMask}>Add to MetaMask</button>
+      <button onClick={addDummyTokenToMetaMask}>Add to MetaMask</button>
     </div>
   );
 };
 
-export default AtaToken;
+export default DummyToken;

@@ -4,14 +4,14 @@ async function main() {
   const [deployer] = await hre.ethers.getSigners();
   console.log(`Deployer address: ${deployer.address}`);
 
-  const AtaToken = await hre.ethers.getContractFactory("AtaToken");
-  const ataToken = await AtaToken.deploy();
+  const DummyToken = await hre.ethers.getContractFactory("DummyToken");
+  const dummyToken = await DummyToken.deploy();
 
-  await ataToken.deployed();
-  console.log(`Deployed AtaToken at ${ataToken.address}`);
+  await dummyToken.deployed();
+  console.log(`Deployed DummyToken at ${dummyToken.address}`);
 
   await hre.run("verify:verify", {
-    address: ataToken.address,
+    address: dummyToken.address,
     constructorArguments: [],
   });
 }

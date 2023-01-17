@@ -131,13 +131,13 @@ What is web3 without custom tokens? Let's bring our project's ERC20 token into o
 
 > `ethers.Contract` is a meta class under the hood, meaning it's a class that creates classes not instances! `Contract` class receives ABI and constructs a new class that has ABI's exported properties.
 
-For our purposes ERC20 token called 'AtaToken (ATA)' has deployed to Avalanche Fuji testnet at `0x5E8F49F4062d3a163cED98261396821ae2996596`. We can use [SnowTrace block explorer][snowtrace] to inspect contract's methods and ABI, token contract on explorer can be found [here](https://testnet.snowtrace.io/address/0x5E8F49F4062d3a163cED98261396821ae2996596). We can import ABI as a regular JSON file and initialize contract!
+For our purposes ERC20 token called 'DummyToken (DT)' has deployed to Avalanche Fuji testnet at `0x5E8F49F4062d3a163cED98261396821ae2996596`. We can use [SnowTrace block explorer][snowtrace] to inspect contract's methods and ABI, token contract on explorer can be found [here](https://testnet.snowtrace.io/address/0x5E8F49F4062d3a163cED98261396821ae2996596). We can import ABI as a regular JSON file and initialize contract!
 
 ```js
-import AtaTokenABI from "../../abi/ataToken.abi.json"; // Path to ABI's JSON file
+import DummyTokenABI from "../../abi/dummyToken.abi.json"; // Path to ABI's JSON file
 
-const ATA_TOKEN_ADDRESS = "0x5E8F49F4062d3a163cED98261396821ae2996596";
-const ATA_TOKEN = new ethers.Contract(ATA_TOKEN_ADDRESS, AtaTokenABI);
+const DUMMY_TOKEN_ADDRESS = "0x5E8F49F4062d3a163cED98261396821ae2996596";
+const DUMMY_TOKEN = new ethers.Contract(DUMMY_TOKEN_ADDRESS, DummyTokenABI);
 ```
 
 Then, we can read token balance using `balanceOf(address)` method similar to AVAX balance.
@@ -145,26 +145,26 @@ Then, we can read token balance using `balanceOf(address)` method similar to AVA
 ```js
 useEffect(() => {
   const getBalance = async () => {
-    const ataToken = ATA_TOKEN.connect(provider);
-    const balance = await ataToken.balanceOf(account);
+    const dummyToken = DUMMY_TOKEN.connect(provider);
+    const balance = await dummyToken.balanceOf(account);
     return ethers.utils.formatEther(balance);
   };
   getBalance().then(setBalance).catch(console.error);
 }, [provider, account]);
 ```
 
-As expected AtaToken balance turns out to be 0. Fortunately, AtaToken contract exports a function to obtain some tokens.
+As expected DummyToken balance turns out to be 0. Fortunately, DummyToken contract exports a function to obtain some tokens.
 
-## Claiming AtaToken
+## Claiming DummyToken
 
 We can check if an account has claimed using a similar function `hasClaimed()` function and we can modify `useEffect` to check when the `AtaBalance` mounts.
 
 ```js
 const getBalanceAndClaimed = async () => {
-  const ataToken = ATA_TOKEN.connect(provider);
+  const dummyToken = DUMMY_TOKEN.connect(provider);
   const [balance, claimed] = await Promise.all([
-    ataToken.balanceOf(account),
-    ataToken.hasClaimed(),
+    dummyToken.balanceOf(account),
+    dummyToken.hasClaimed(),
   ]);
   return [ethers.utils.formatEther(balance), claimed];
 };
@@ -177,9 +177,9 @@ If the user hasn't claimed we can a render a button that when pressed will invok
 ```js
 const claim = async () => {
   const signer = provider.getSigner();
-  const ataToken = ATA_TOKEN.connect(signer);
+  const dummyToken = DUMMY_TOKEN.connect(signer);
 
-  const tx = await ataToken.claim();
+  const tx = await dummyToken.claim();
   await tx.wait();
 };
 ```
@@ -188,16 +188,16 @@ If we refresh the page we can see our funds arrive! However, it isn't such a goo
 
 ```js
 const getBalanceAndClaimed = async (account, provider) => {
-  const ataToken = ATA_TOKEN.connect(provider);
+  const dummyToken = DUMMY_TOKEN.connect(provider);
   const [balance, claimed] = await Promise.all([
-    ataToken.balanceOf(account),
-    ataToken.hasClaimed(account),
+    dummyToken.balanceOf(account),
+    dummyToken.hasClaimed(account),
   ]);
   return [ethers.utils.formatEther(balance), claimed];
 };
 
-const AtaToken = ({ account, provider }) => {
-  // `AtaToken` component state
+const DummyToken = ({ account, provider }) => {
+  // `DummyToken` component state
 
   const claim = async () => {
     // ...
@@ -218,12 +218,12 @@ const AtaToken = ({ account, provider }) => {
 };
 ```
 
-## Adding AtaToken to MetaMask
+## Adding DummyToken to MetaMask
 
-Even tough, users can claim their tokens, AtaToken doesn't show up in MetaMask wallet. We can remedy this situation by sending `wallet_watchAsset` request through global `ethereum` object. We provide address of the token, symbol, decimals and lastly image for MetaMask to use.
+Even tough, users can claim their tokens, DummyToken doesn't show up in MetaMask wallet. We can remedy this situation by sending `wallet_watchAsset` request through global `ethereum` object. We provide address of the token, symbol, decimals and lastly image for MetaMask to use.
 
 ```js
-const addAtaTokenToMetaMask = async () => {
+const addDummyTokenToMetaMask = async () => {
   if (!window.ethereum) {
     return false;
   }
@@ -233,8 +233,8 @@ const addAtaTokenToMetaMask = async () => {
       params: {
         type: "ERC20",
         options: {
-          address: ATA_TOKEN_ADDRESS,
-          symbol: "ATA",
+          address: DUMMY_TOKEN_ADDRESS,
+          symbol: "DT",
           decimals: 18,
           image: "https://ata-token.netlify.app/opn.png",
         },
@@ -251,7 +251,7 @@ const addAtaTokenToMetaMask = async () => {
 
 ERC20 allocation staking is one of most common practices in web3 launchpads and DeFi applications. Usually, users lock some amount of funds into smart contract and receive certain amount of rewards funds in return as interest. In case of launchpads like [OpenPad][openpad] in addition to receiving interest users are able to invest in launchpad project.
 
-Lastly, for our application we will integrating a staking contact. AtaToken staking contract is deployed at `0xAC1BdE0464D932bf1097A9492dCa8c3144194890` and we can inspect the contract code and ABI [here](https://testnet.snowtrace.io/address/0xAC1BdE0464D932bf1097A9492dCa8c3144194890#code).
+Lastly, for our application we will integrating a staking contact. DummyToken staking contract is deployed at `0xAC1BdE0464D932bf1097A9492dCa8c3144194890` and we can inspect the contract code and ABI [here](https://testnet.snowtrace.io/address/0xAC1BdE0464D932bf1097A9492dCa8c3144194890#code).
 
 Staking contract exports stake and reward token amount for a given address and also total staked token amounts. We can read these values like any other contract value using `stakedOf()`, `rewardOf()` and `totalStaked()` respectively.
 
@@ -301,12 +301,12 @@ const Staking = ({ account, provider }) => {
         <label htmlFor="stake">Stake</label>
         <input
           id="stake"
-          placeholder="0.0 ATA"
+          placeholder="0.0 DT"
           value={stake}
           onChange={e => setStake(e.target.value)}
         />
         <button type="submit" onClick={handleStake}>
-          Stake ATA
+          Stake DT
         </button>
       </form>
       {/* ... */}
@@ -326,10 +326,13 @@ const handleStake = async event => {
   const signer = provider.getSigner(account);
   const amount = ethers.utils.parseEther(stake);
 
-  const ataToken = ATA_TOKEN.connect(signer);
-  const allowance = await ataToken.allowance(account, STAKING_CONTRACT.address);
+  const dummyToken = DUMMY_TOKEN.connect(signer);
+  const allowance = await dummyToken.allowance(
+    account,
+    STAKING_CONTRACT.address
+  );
   if (allowance.lt(amount)) {
-    const tx = await ataToken.approve(STAKING_CONTRACT.address, amount);
+    const tx = await dummyToken.approve(STAKING_CONTRACT.address, amount);
     await tx.wait();
   }
   // ...

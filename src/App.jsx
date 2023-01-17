@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
-import { useState, useEffect } from "react";
-import AtaToken from "./components/ataToken";
+import { useEffect, useState } from "react";
+import DummyToken from "./components/dummyToken";
 import Staking from "./components/staking";
 
 const Balance = ({ provider, account }) => {
@@ -68,7 +68,7 @@ function App() {
       {provider && account && (
         <>
           <Balance provider={provider} account={account} />
-          <AtaToken provider={provider} account={account} />
+          <DummyToken provider={provider} account={account} />
           <Staking provider={provider} account={account} />
         </>
       )}

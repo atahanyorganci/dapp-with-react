@@ -3,14 +3,14 @@ pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract AtaToken is ERC20 {
+contract DummyToken is ERC20 {
   uint8 constant CLAIM_STATUS_PENDING = 0;
   uint8 constant CLAIM_STATUS_CLAIMED = 1;
   uint256 constant  REWARD_AMOUNT = 1000 * 10 ** 18;
 
   mapping(address => uint8) claimants;
 
-  constructor() ERC20("AtaToken", "ATA") {
+  constructor() ERC20("DummyToken", "DT") {
     _mint(msg.sender, 1000000 * 10**decimals());
   }
 

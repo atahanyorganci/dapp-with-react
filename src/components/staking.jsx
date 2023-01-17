@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { ATA_TOKEN, STAKING_CONTRACT } from "../contracts";
+import { DUMMY_TOKEN, STAKING_CONTRACT } from "../contracts";
 
 const getStakingViews = async (account, provider) => {
   const signer = provider.getSigner(account);
@@ -27,13 +27,13 @@ const Staking = ({ account, provider }) => {
     const signer = provider.getSigner(account);
     const amount = ethers.utils.parseEther(stake);
 
-    const ataToken = ATA_TOKEN.connect(signer);
-    const allowance = await ataToken.allowance(
+    const dummyToken = DUMMY_TOKEN.connect(signer);
+    const allowance = await dummyToken.allowance(
       account,
       STAKING_CONTRACT.address
     );
     if (allowance.lt(amount)) {
-      const tx = await ataToken.approve(STAKING_CONTRACT.address, amount);
+      const tx = await dummyToken.approve(STAKING_CONTRACT.address, amount);
       await tx.wait();
     }
 
@@ -83,34 +83,34 @@ const Staking = ({ account, provider }) => {
     <div>
       <h2>Staking</h2>
       <p>
-        <strong>Staked: </strong> {views.staked} ATA
+        <strong>Staked: </strong> {views.staked} DT
       </p>
       <p>
-        <strong>Reward: </strong> {views.reward} ATA
+        <strong>Reward: </strong> {views.reward} DT
       </p>
       <p>
-        <strong>Total Staked: </strong> {views.totalStaked} ATA
+        <strong>Total Staked: </strong> {views.totalStaked} DT
       </p>
       <div style={{ display: "flex" }}>
         <form onSubmit={handleStake}>
           <label htmlFor="stake">Stake</label>
           <input
             id="stake"
-            placeholder="0.0 ATA"
+            placeholder="0.0 DT"
             value={stake}
             onChange={e => setStake(e.target.value)}
           />
-          <button type="submit">Stake ATA</button>
+          <button type="submit">Stake DT</button>
         </form>
         <form onSubmit={handleWithdraw}>
           <label htmlFor="withdraw">Withdraw</label>
           <input
             id="withdraw"
-            placeholder="0.0 ATA"
+            placeholder="0.0 DT"
             value={withdraw}
             onChange={e => setWithdraw(e.target.value)}
           />
-          <button type="submit">Withdraw ATA</button>
+          <button type="submit">Withdraw DT</button>
         </form>
       </div>
       <button onClick={handleClaimReward}>Claim Reward</button>

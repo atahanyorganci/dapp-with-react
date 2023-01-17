@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 
 async function main() {
-  const ataTokenBuildInfo = await hre.artifacts.readArtifact("AtaToken");
+  const dummyTokenBuildInfo = await hre.artifacts.readArtifact("DummyToken");
 
   const [deployer] = await hre.ethers.getSigners();
   console.log(`Deployer address: ${deployer.address}`);
@@ -25,13 +25,13 @@ async function main() {
   await staking.deployed();
   console.log(`Deployed Staking at ${staking.address}`);
 
-  const ataTokenContract = new hre.ethers.Contract(
+  const dummyTokenContract = new hre.ethers.Contract(
     tokenAddress,
-    ataTokenBuildInfo.abi,
+    dummyTokenBuildInfo.abi,
     deployer
   );
 
-  const tx = await ataTokenContract.approve(
+  const tx = await dummyTokenContract.approve(
     staking.address,
     hre.ethers.utils.parseEther("1000000000")
   );
