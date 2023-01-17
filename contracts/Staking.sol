@@ -8,41 +8,68 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract Staking is Ownable, Pausable, ReentrancyGuard {
-  using SafeMath for uint256;
   using SafeERC20 for IERC20;
 
   event Staked(address _from, uint256 _amount);
   event Withdrawn(address _from, uint256 _amount);
   event RewardClaimed(address _from, uint256 _amount);
 
-  IERC20 public rewardsToken;
-  IERC20 public stakingToken;
+  struct StakeState {
+    uint256 amount;
+    uint256 lastUpdated;
+    uint256 previousReward;
+  }
 
+  address private immutable stakingBank;
+  IERC20 public immutable rewardsToken;
+  IERC20 public immutable stakingToken;
+
+  // Reward rate per second per token staked
   uint256 private rewardRate;
-  uint256 private lastUpdateTime;
-  uint256 private rewardPerTokenStored;
 
-  address private stakingBank;
-
-  mapping(address => uint256) private userRewardPerTokenPaid;
-  mapping(address => uint256) private rewards;
-
+  // Total amount of tokens staked
   uint256 private totalSupply;
-  mapping(address => uint256) private _balances;
+
+  // Mapping of staked balances
+  mapping(address => StakeState) private balances;
 
   constructor(
     address _stakingToken,
     address _stakingBank,
     uint256 _rewardRate
   ) {
-    require(_stakingToken != address(0), "Staking token address cannot be 0");
-    require(_stakingBank != address(0), "Staking bank address cannot be 0");
+    require(
+      _stakingToken != address(0),
+      "Staking: staking token address cannot be 0"
+    );
+    require(
+      _stakingBank != address(0),
+      "Staking: staking bank address cannot be 0"
+    );
+    require(_rewardRate > 0, "Staking: reward rate must be greater than 0");
 
+    stakingBank = _stakingBank;
     stakingToken = IERC20(_stakingToken);
     rewardsToken = IERC20(_stakingToken);
 
-    stakingBank = _stakingBank;
     rewardRate = _rewardRate;
+  }
+
+  function stakedOf(address _account) public view returns (uint256) {
+    return balances[_account].amount;
+  }
+
+  function rewardOf(address _account) public view returns (uint256) {
+    return
+      balances[_account].previousReward +
+      calculateReward(
+        balances[_account].amount,
+        balances[_account].lastUpdated
+      );
+  }
+
+  function totalStaked() public view returns (uint256) {
+    return totalSupply;
   }
 
   function pause() public onlyOwner {
@@ -53,104 +80,55 @@ contract Staking is Ownable, Pausable, ReentrancyGuard {
     _unpause();
   }
 
-  function updateStakingBank(address _stakingBank) public onlyOwner {
-    require(_stakingBank != address(0), "Staking bank address cannot be 0");
-    stakingBank = _stakingBank;
+  function calculateReward(
+    uint256 _amount,
+    uint256 _from
+  ) public view returns (uint256) {
+    return ((_amount * (block.timestamp - _from)) * rewardRate) / 1e18;
   }
 
-  function updateRewardRate(uint256 _rate)
-    public
-    onlyOwner
-    updateReward(address(0))
-  {
-    rewardRate = _rate;
-  }
-
-  function rewardPerToken() private view returns (uint256) {
-    if (totalSupply == 0) {
-      return rewardPerTokenStored;
+  modifier updateReward(address _account) {
+    uint256 staked = balances[_account].amount;
+    if (staked > 0) {
+      uint256 reward = calculateReward(staked, balances[_account].lastUpdated);
+      balances[_account].previousReward += reward;
     }
-    return
-      rewardPerTokenStored.add(
-        (block.timestamp).sub(lastUpdateTime).mul(rewardRate).mul(1e18).div(
-          totalSupply
-        )
-      );
-  }
-
-  function earned(address account) private view returns (uint256) {
-    return
-      _balances[account]
-        .mul(rewardPerToken().sub(userRewardPerTokenPaid[account]))
-        .div(1e18)
-        .add(rewards[account]);
-  }
-
-  modifier updateReward(address account) {
-    rewardPerTokenStored = rewardPerToken();
-    lastUpdateTime = block.timestamp;
-
-    if (account != address(0)) {
-      rewards[account] = earned(account);
-      userRewardPerTokenPaid[account] = rewardPerTokenStored;
-    }
+    balances[msg.sender].lastUpdated = block.timestamp;
     _;
   }
 
-  function stake(uint256 _amount)
-    public
-    nonReentrant
-    updateReward(msg.sender)
-  {
-    require(_amount > 0, "Stake amount must be greater than 0.");
+  function stake(uint256 _amount) public nonReentrant updateReward(msg.sender) {
+    require(_amount > 0, "Staking: amount must be greater than 0");
 
-    totalSupply = totalSupply.add(_amount);
-    _balances[msg.sender] = _balances[msg.sender].add(_amount);
     stakingToken.safeTransferFrom(msg.sender, address(this), _amount);
+    totalSupply += _amount;
+    balances[msg.sender].amount += _amount;
+
     emit Staked(msg.sender, _amount);
   }
 
-  function withdraw(uint256 _amount)
-    public
-    nonReentrant
-    updateReward(msg.sender)
-  {
+  function withdraw(
+    uint256 _amount
+  ) public nonReentrant updateReward(msg.sender) {
+    uint256 staked = balances[msg.sender].amount;
     require(
-      _amount <= _balances[msg.sender],
-      "Withdraw amount must be less than or equal to balance"
+      _amount <= staked,
+      "Staking: withdraw amount cannot be greater than staked amount"
     );
+    require(staked > 0, "Staking: no tokens staked");
 
-    if (_amount > 0) {
-      totalSupply = totalSupply.sub(_amount);
-      _balances[msg.sender] = _balances[msg.sender].sub(_amount);
-      stakingToken.safeTransfer(msg.sender, _amount);
-      emit Withdrawn(msg.sender, _amount);
-    }
+    stakingToken.safeTransfer(msg.sender, _amount);
+    totalSupply -= _amount;
+    balances[msg.sender].amount -= _amount;
+    emit Withdrawn(msg.sender, _amount);
   }
 
   function claimReward() public nonReentrant updateReward(msg.sender) {
-    uint256 currentReward = rewards[msg.sender];
-    if (currentReward > 0) {
-      rewards[msg.sender] = 0;
-      rewardsToken.safeTransferFrom(stakingBank, msg.sender, currentReward);
-      emit RewardClaimed(msg.sender, currentReward);
-    }
-  }
+    uint256 reward = rewardOf(msg.sender);
+    require(reward >= 0, "Staking: no rewards to claim");
 
-  function stakedOf(address _account) public view returns (uint256) {
-    return _balances[_account];
-  }
-
-  function rewardOf(address _account)
-    public
-    view
-    onlyOwner
-    returns (uint256)
-  {
-    return earned(_account);
-  }
-
-  function totalStaked() public view returns (uint256) {
-    return totalSupply;
+    rewardsToken.safeTransfer(msg.sender, reward);
+    balances[msg.sender].previousReward = 0;
+    emit RewardClaimed(msg.sender, reward);
   }
 }
