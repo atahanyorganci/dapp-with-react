@@ -1,35 +1,42 @@
 {
-  "name": "dapp-with-react",
-  "description": "DeFi application with staking and custom ERC20 token and React.js frontend.",
-  "version": "0.0.1",
-  "author": {
-    "name": "Atahan Yorgancı"
-  },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/atahanyorganci/dapp-with-react.git"
-  },
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "ethers": "^5.7.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^1.0.2",
-    "@openzeppelin/contracts": "^4.8.1",
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
-    "@vitejs/plugin-react": "^2.2.0",
-    "chai": "^4.3.7",
-    "dotenv": "^16.0.3",
-    "hardhat": "^2.12.6",
-    "prettier": "^2.8.3",
-    "vite": "^3.2.5"
-  }
+    "name": "dapp-with-react",
+    "description": "DeFi application with staking and custom ERC20 token and React.js frontend.",
+    "version": "0.0.1",
+    "author": {
+        "name": "Atahan Yorgancı"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/atahanyorganci/dapp-with-react.git"
+    },
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "ethers": "^5.7.2",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    },
+    "devDependencies": {
+        "@nomicfoundation/hardhat-toolbox": "^1.0.2",
+        "@openzeppelin/contracts": "^4.8.1",
+        "@types/react": "^18.0.27",
+        "@types/react-dom": "^18.0.10",
+        "@vitejs/plugin-react": "^2.2.0",
+        "chai": "^4.3.7",
+        "dotenv": "^16.0.3",
+        "eslint": "^8.32.0",
+        "eslint-config-prettier": "^8.6.0",
+        "eslint-plugin-import": "^2.27.5",
+        "eslint-plugin-jsx-a11y": "^6.7.1",
+        "eslint-plugin-prettier": "^4.2.1",
+        "eslint-plugin-react": "^7.32.1",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "hardhat": "^2.12.6",
+        "prettier": "^2.8.3",
+        "vite": "^3.2.5"
+    }
 }
