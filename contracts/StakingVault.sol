@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-contract Staking is Ownable, Pausable, ReentrancyGuard {
+contract StakingVault is Ownable, Pausable, ReentrancyGuard {
   using SafeERC20 for IERC20;
 
   event Staked(address _from, uint256 _amount);
@@ -40,13 +40,16 @@ contract Staking is Ownable, Pausable, ReentrancyGuard {
   ) {
     require(
       _stakingToken != address(0),
-      "Staking: staking token address cannot be 0"
+      "StakingVault: staking token address cannot be 0"
     );
     require(
       _stakingBank != address(0),
-      "Staking: staking bank address cannot be 0"
+      "StakingVault: staking bank address cannot be 0"
     );
-    require(_rewardRate > 0, "Staking: reward rate must be greater than 0");
+    require(
+      _rewardRate > 0,
+      "StakingVault: reward rate must be greater than 0"
+    );
 
     stakingBank = _stakingBank;
     stakingToken = IERC20(_stakingToken);
@@ -98,7 +101,7 @@ contract Staking is Ownable, Pausable, ReentrancyGuard {
   }
 
   function stake(uint256 _amount) public nonReentrant updateReward(msg.sender) {
-    require(_amount > 0, "Staking: amount must be greater than 0");
+    require(_amount > 0, "StakingVault: amount must be greater than 0");
 
     stakingToken.safeTransferFrom(msg.sender, address(this), _amount);
     totalSupply += _amount;
@@ -113,9 +116,9 @@ contract Staking is Ownable, Pausable, ReentrancyGuard {
     uint256 staked = balances[msg.sender].amount;
     require(
       _amount <= staked,
-      "Staking: withdraw amount cannot be greater than staked amount"
+      "StakingVault: withdraw amount cannot be greater than staked amount"
     );
-    require(staked > 0, "Staking: no tokens staked");
+    require(staked > 0, "StakingVault: no tokens staked");
 
     stakingToken.safeTransfer(msg.sender, _amount);
     totalSupply -= _amount;
@@ -124,8 +127,8 @@ contract Staking is Ownable, Pausable, ReentrancyGuard {
   }
 
   function claimReward() public nonReentrant updateReward(msg.sender) {
-    uint256 reward = rewardOf(msg.sender);
-    require(reward >= 0, "Staking: no rewards to claim");
+    uint256 reward = balances[msg.sender].previousReward;
+    require(reward >= 0, "StakingVault: no rewards to claim");
 
     rewardsToken.safeTransfer(msg.sender, reward);
     balances[msg.sender].previousReward = 0;

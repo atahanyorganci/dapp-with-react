@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import DummyTokenABI from "../abi/dummyToken.abi.json";
-import StakingAbi from "../abi/staking.abi.json";
+import StakingAbi from "../abi/stakingVault.abi.json";
 
 export const DUMMY_TOKEN_ADDRESS = "0x5E8F49F4062d3a163cED98261396821ae2996596";
 export const DUMMY_TOKEN = new ethers.Contract(

@@ -19,11 +19,11 @@ async function main() {
     hre.ethers.utils.parseEther(rewardRate),
   ];
 
-  const Staking = await hre.ethers.getContractFactory("Staking");
-  const staking = await Staking.deploy(...constructorArguments);
+  const StakingVault = await hre.ethers.getContractFactory("StakingVault");
+  const stakingVault = await StakingVault.deploy(...constructorArguments);
 
-  await staking.deployed();
-  console.log(`Deployed Staking at ${staking.address}`);
+  await stakingVault.deployed();
+  console.log(`Deployed StakingVault at ${stakingVault.address}`);
 
   const dummyTokenContract = new hre.ethers.Contract(
     tokenAddress,
@@ -32,14 +32,16 @@ async function main() {
   );
 
   const tx = await dummyTokenContract.approve(
-    staking.address,
+    stakingVault.address,
     hre.ethers.utils.parseEther("1000000000")
   );
   const receipt = await tx.wait();
-  console.log(`Approved Staking contract tx hash: ${receipt.transactionHash}`);
+  console.log(
+    `Approved StakingVault contract tx hash: ${receipt.transactionHash}`
+  );
 
   await hre.run("verify:verify", {
-    address: staking.address,
+    address: stakingVault.address,
     constructorArguments,
   });
 }
