@@ -5,8 +5,8 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract DummyToken is ERC20, Ownable {
-  uint256 constant INITIAL_SUPPLY = 1_000_000 * 10 ** 18;
-  uint256 constant REWARD_AMOUNT = 1000 * 10 ** 18;
+  uint256 public constant INITIAL_SUPPLY = 1_000_000 * 10 ** 18;
+  uint256 public constant REWARD_AMOUNT = 1000 * 10 ** 18;
 
   enum ClaimStatus {
     NOT_CLAIMED,
