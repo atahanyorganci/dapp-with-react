@@ -20,7 +20,7 @@ contract StakingVault is Ownable, Pausable, ReentrancyGuard {
     uint256 previousReward;
   }
 
-  address private immutable stakingBank;
+  address private stakingBank;
   IERC20 public immutable rewardsToken;
   IERC20 public immutable stakingToken;
 
@@ -81,6 +81,14 @@ contract StakingVault is Ownable, Pausable, ReentrancyGuard {
 
   function unpause() public onlyOwner {
     _unpause();
+  }
+
+  function setStakingBank(address _stakingBank) public onlyOwner {
+    require(
+      _stakingBank != address(0),
+      "StakingVault: staking bank address cannot be 0"
+    );
+    stakingBank = _stakingBank;
   }
 
   function calculateReward(
