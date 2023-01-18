@@ -16,7 +16,7 @@ const addDummyTokenToMetaMask = async () => {
     return false;
   }
   try {
-    const added = await window.ethereum.request({
+    await window.ethereum.request({
       method: "wallet_watchAsset",
       params: {
         type: "ERC20",
@@ -27,9 +27,8 @@ const addDummyTokenToMetaMask = async () => {
         },
       },
     });
-    return added;
   } catch (error) {
-    return false;
+    console.error(error);
   }
 };
 
