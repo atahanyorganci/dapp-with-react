@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity >=0.8.0 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract DummyToken is ERC20 {
   uint8 constant CLAIM_STATUS_PENDING = 0;
   uint8 constant CLAIM_STATUS_CLAIMED = 1;
-  uint256 constant  REWARD_AMOUNT = 1000 * 10 ** 18;
+  uint256 constant REWARD_AMOUNT = 1000 * 10 ** 18;
 
   mapping(address => uint8) claimants;
 
   constructor() ERC20("DummyToken", "DT") {
-    _mint(msg.sender, 1000000 * 10**decimals());
+    _mint(msg.sender, 1_000_000 * 10 ** 18);
   }
 
   function claim() public {
