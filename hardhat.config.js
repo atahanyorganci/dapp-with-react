@@ -1,5 +1,14 @@
 require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config();
+const { config } = require("dotenv");
+const path = require("path");
+
+function loadConfig() {
+  const env = process.env.NODE_ENV || "development";
+  [".env", ".env.local", `.env.${env}`, `.env.${env}.local`]
+    .map(file => path.join(__dirname, file))
+    .forEach(file => config({ path: file }));
+}
+loadConfig();
 
 const GETBLOCKIO_API_KEY = process.env.GETBLOCKIO_API_KEY;
 const BSC_SCAN_API_KEY = process.env.BSC_SCAN_API_KEY;
