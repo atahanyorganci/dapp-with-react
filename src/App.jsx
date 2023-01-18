@@ -17,7 +17,7 @@ const Balance = ({ provider, account }) => {
   if (!balance) {
     return <p>Loading...</p>;
   }
-  return <p>Balance: {balance} AVAX</p>;
+  return <p>Balance: {balance} tBNB</p>;
 };
 
 function App() {

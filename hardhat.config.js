@@ -2,18 +2,37 @@ require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
 const GETBLOCKIO_API_KEY = process.env.GETBLOCKIO_API_KEY;
-const SNOWTRACE_API_KEY = process.env.SNOWTRACE_API_KEY;
+const BSC_SCAN_API_KEY = process.env.BSC_SCAN_API_KEY;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.8.4",
+  solidity: {
+    version: "0.8.17",
+    settings: {
+      viaIR: true,
+      optimizer: {
+        enabled: true,
+        runs: 1000,
+      },
+    },
+  },
   networks: {
-    testnet: {
-      url: `https://avax.getblock.io/testnet/ext/bc/C/rpc`,
-      chainId: 43113,
+    bsc: {
+      url: "https://bsc.getblock.io/mainnet/",
+      chainId: 56,
+      gasPrice: 20000000000,
+      accounts: [PRIVATE_KEY],
+      httpHeaders: {
+        "x-api-key": GETBLOCKIO_API_KEY,
+      },
+    },
+    bscTestnet: {
+      url: "https://bsc.getblock.io/testnet/",
+      chainId: 97,
+      gasPrice: 20000000000,
       accounts: [PRIVATE_KEY],
       httpHeaders: {
         "x-api-key": GETBLOCKIO_API_KEY,
@@ -22,7 +41,8 @@ module.exports = {
   },
   etherscan: {
     apiKey: {
-      avalancheFujiTestnet: SNOWTRACE_API_KEY,
+      bsc: BSC_SCAN_API_KEY,
+      bscTestnet: BSC_SCAN_API_KEY,
     },
   },
 };
