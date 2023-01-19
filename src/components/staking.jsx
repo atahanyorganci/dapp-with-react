@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
-import { DUMMY_TOKEN, STAKING_CONTRACT } from "../contracts";
+import { DUMMY_TOKEN, provider, STAKING_CONTRACT } from "../web3";
 
-const getStakingViews = async (account, provider) => {
+const getStakingViews = async account => {
     const signer = provider.getSigner(account);
     const staking = STAKING_CONTRACT.connect(signer);
     const [staked, reward, totalStaked] = await Promise.all([
@@ -17,7 +17,7 @@ const getStakingViews = async (account, provider) => {
     };
 };
 
-const Staking = ({ account, provider }) => {
+const Staking = ({ account }) => {
     const [views, setViews] = useState({});
     const [stake, setStake] = useState("");
     const [withdraw, setWithdraw] = useState("");
@@ -42,9 +42,7 @@ const Staking = ({ account, provider }) => {
 
         const staking = STAKING_CONTRACT.connect(signer);
 
-        const tx = await staking.stake(amount, {
-            gasLimit: 1_000_000,
-        });
+        const tx = await staking.stake(amount);
         await tx.wait();
     };
 
@@ -53,9 +51,8 @@ const Staking = ({ account, provider }) => {
         const signer = provider.getSigner(account);
         const staking = STAKING_CONTRACT.connect(signer);
 
-        const tx = await staking.withdraw(ethers.utils.parseEther(withdraw), {
-            gasLimit: 1_000_000,
-        });
+        const amount = ethers.utils.parseEther(withdraw);
+        const tx = await staking.withdraw(amount);
         await tx.wait();
     };
 
@@ -63,9 +60,7 @@ const Staking = ({ account, provider }) => {
         const signer = provider.getSigner(account);
         const staking = STAKING_CONTRACT.connect(signer);
 
-        const tx = await staking.claimReward({
-            gasLimit: 1_000_000,
-        });
+        const tx = await staking.claimReward();
         await tx.wait();
     };
 

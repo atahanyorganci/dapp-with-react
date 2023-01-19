@@ -2,8 +2,9 @@ import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import DummyToken from "./components/dummyToken";
 import Staking from "./components/staking";
+import { provider } from "./web3";
 
-const Balance = ({ provider, account }) => {
+const Balance = ({ account }) => {
     const [balance, setBalance] = useState("");
 
     useEffect(() => {
@@ -22,7 +23,6 @@ const Balance = ({ provider, account }) => {
 
 function App() {
     const [account, setAccount] = useState(null);
-    const [provider, setProvider] = useState(null);
 
     const checkAccounts = async () => {
         if (!window.ethereum) {
@@ -49,10 +49,6 @@ function App() {
 
     useEffect(() => {
         checkAccounts().then(setAccount).catch(console.error);
-        if (window.ethereum) {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            setProvider(provider);
-        }
     }, []);
 
     return (
@@ -70,9 +66,9 @@ function App() {
             )}
             {provider && account && (
                 <>
-                    <Balance provider={provider} account={account} />
-                    <DummyToken provider={provider} account={account} />
-                    <Staking provider={provider} account={account} />
+                    <Balance account={account} />
+                    <DummyToken account={account} />
+                    <Staking account={account} />
                 </>
             )}
         </div>

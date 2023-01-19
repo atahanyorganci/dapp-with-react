@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
-import { DUMMY_TOKEN, DUMMY_TOKEN_ADDRESS } from "../contracts";
+import { DUMMY_TOKEN, DUMMY_TOKEN_ADDRESS, provider } from "../web3";
 
-const getBalanceAndClaimed = async (account, provider) => {
+const getBalanceAndClaimed = async account => {
     const dummyToken = DUMMY_TOKEN.connect(provider);
     const [balance, claimed] = await Promise.all([
         dummyToken.balanceOf(account),
@@ -32,16 +32,14 @@ const addDummyTokenToMetaMask = async () => {
     }
 };
 
-const DummyToken = ({ account, provider }) => {
+const DummyToken = ({ account }) => {
     const [balance, setBalance] = useState("");
     const [claimed, setClaimed] = useState(false);
 
     const claim = async () => {
         const signer = provider.getSigner();
         const dummyToken = DUMMY_TOKEN.connect(signer);
-        const tx = await dummyToken.claim({
-            gasLimit: 1_000_000,
-        });
+        const tx = await dummyToken.claim();
         const receipt = await tx.wait();
         console.log(receipt);
 
