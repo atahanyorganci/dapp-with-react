@@ -144,7 +144,7 @@ contract StakingVault is Ownable, Pausable, ReentrancyGuard {
         uint256 reward = balances[msg.sender].previousReward;
         require(reward >= 0, "StakingVault: no rewards to claim");
 
-        rewardsToken.safeTransferFrom(address(this), msg.sender, reward);
+        rewardsToken.safeTransferFrom(stakingBank, msg.sender, reward);
         balances[msg.sender].previousReward = 0;
         emit RewardClaimed(msg.sender, reward);
     }
